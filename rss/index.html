@@ -1,5 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Google Summer of Code 2014]]></title><description><![CDATA[Creating a REST API for humans]]></description><link>http://127.0.0.1:2368/</link><generator>Ghost v0.4.2</generator><lastBuildDate>Sun, 25 May 2014 15:43:22 GMT</lastBuildDate><atom:link href="http://127.0.0.1:2368/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Google Summer of Code Week 1 - The coding starts]]></title><description><![CDATA[<p>After completing a lot of discussions on what API calls we should have, we decided to go with four basic sets of API calls- <code>courses</code> for course related information, <code>instructors</code> for calls that instructors would use (to see the list of students for instance), <code>students</code> for calls that would be used by students and <code>tests</code> for test related calls.</p>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Google Summer of Code 2014]]></title><description><![CDATA[Creating a REST API for humans]]></description><link>http://127.0.0.1:2368/</link><generator>Ghost v0.4.2</generator><lastBuildDate>Tue, 03 Jun 2014 08:32:49 GMT</lastBuildDate><atom:link href="http://127.0.0.1:2368/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Week 2 - Making the first API calls]]></title><description><![CDATA[<p>After successfully creating the login and logout API calls, the next step was to create some basic API calls. The very first area that we decided to implement was <code>courses</code>.</p>
+
+<p>The following API calls were implemented.  </p>
+
+<pre><code>GET /api/courses/  
+GET /api/courses/[course_id]  
+GET /api/courses?title=[title]&amp;category_id=[category_id]&amp;primary_language=[primary_language]  
+</code></pre>
+
+<p>In my previous post, I mentioned that I hadn't implemented how to decide the access level of a member. This week, I added the feature by making queries to two different tables- one for members and the other for admins. Since that was accomplished, I could proceed with two courses related calls for instructors and students.</p>
+
+<pre><code>GET /api/students/[student_id]/courses  
+GET /api/instructors/[instructor_id]/courses  
+</code></pre>
+
+<p>The first would return list the courses that a student is enrolled in and the second would return the list of courses that an instructor teaches.</p>
+
+<p>I had created a function last week to authenticate an access token. Because of the two above APIs, I needed to cross check if the access token matched the student or instructor ID provided in the URL above. That would mean an extra query. To avoid that, I added an extra argument to the authentication function that returns the <code>member_id</code> along with the token. Here's how it looks.</p>
+
+<pre><code>function (..., $return_member_id = false) {  
+    ...
+    return array($token, $member_id);
+}
+</code></pre>
+
+<p>How do I get the value?</p>
+
+<pre><code>list($token, $member_id) = get_access_token(..., true);  
+</code></pre>
+
+<p>Pretty Pythonic, isn't it?</p>
+
+<p>Another important task accomplished in the week is the logging of all API calls. The request URI, token, HTTP method, IP address and the response are logged in the database.</p>
+
+<p>One last thing to do is to create logs in case of errors.</p>]]></description><link>http://127.0.0.1:2368/week-2-making-the-first-api-calls/</link><guid isPermaLink="false">70df675c-5fa0-4168-a110-8d261795b2c4</guid><dc:creator><![CDATA[Shaumik Daityari]]></dc:creator><pubDate>Sun, 01 Jun 2014 08:31:00 GMT</pubDate></item><item><title><![CDATA[Week 1 - The coding starts]]></title><description><![CDATA[<p>After completing a lot of discussions on what API calls we should have, we decided to go with four basic sets of API calls- <code>courses</code> for course related information, <code>instructors</code> for calls that instructors would use (to see the list of students for instance), <code>students</code> for calls that would be used by students and <code>tests</code> for test related calls.</p>
 
 <p>The next task was to decide the access levels. We decided to have five.</p>
 

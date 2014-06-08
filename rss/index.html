@@ -1,5 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Google Summer of Code 2014]]></title><description><![CDATA[Creating a REST API for humans]]></description><link>http://127.0.0.1:2368/</link><generator>Ghost v0.4.2</generator><lastBuildDate>Tue, 03 Jun 2014 08:32:49 GMT</lastBuildDate><atom:link href="http://127.0.0.1:2368/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Week 2 - Making the first API calls]]></title><description><![CDATA[<p>After successfully creating the login and logout API calls, the next step was to create some basic API calls. The very first area that we decided to implement was <code>courses</code>.</p>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Google Summer of Code 2014]]></title><description><![CDATA[Creating a REST API for humans]]></description><link>http://127.0.0.1:2368/</link><generator>Ghost v0.4.2</generator><lastBuildDate>Sun, 08 Jun 2014 15:40:40 GMT</lastBuildDate><atom:link href="http://127.0.0.1:2368/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Week 3 - Developing Course APIs]]></title><description><![CDATA[<p>I left last week with the idea of implementing the next two calls.</p>
+
+<pre><code>GET /api/students/[student_id]/courses  
+GET /api/instructors/[instructor_id]/courses  
+</code></pre>
+
+<p>The former would retrive a list courses that a student is enrolled in and the latter would get the list of courses an instructor teaches.</p>
+
+<p>The emphasis in these two calls was to re-use the SQL queries for all calls that returned a list of courses. This was best accomplished by adding the following where clauses for each of the .</p>
+
+<pre><code>WHERE ... AND ('%s' = 'garbage_value' OR title like '%%s%') AND ...;  
+</code></pre>
+
+<p>If a certain variable (like <code>title</code>) wasn't present in the URL parameters, it is assigned a garbage value. Therefore, the first part of the clause is <code>true</code> and this part doesn't affect the whole query in general. If the variable is present, the first part of the query is <code>false</code> and the second part determines if it's <code>true</code> overall.</p>
+
+<p>After all that, we are having second thoughts about the complexity of the query. I will try an alternative version where I develop the <code>WHERE</code> clause using PHP and check which one is faster.</p>
+
+<p>Additional API calls were implemented for students and instructors as follows. I believe they are self explanatory.</p>
+
+<pre><code>GET /api/students/[student_id]/courses/[course_id]  
+GET /api/students/[student_id]/courses?title=[title]&amp;category_id=[category_id]&amp;primary_language=[primary_language]
+
+GET /api/instructors/[instructor_id]/courses/[course_id]  
+GET /api/instructors/[instructor_id]/courses?title=[title]&amp;category_id=[category_id]&amp;primary_language=[primary_language]
+</code></pre>
+
+<p>Another part that I completed in the week was to develop the APIs for course categories (except <code>PUT</code> pending some discussions with my mentor). (Note that these course categories are different from question categories and I would need to create an API for them later in the summer.)</p>
+
+<p>This week also saw some changes in the structure of the code. Some of the logic that I kept in <code>core/api_functions.php</code> was moved to a <code>shared</code> directory. Core now contains functions related to the core functioning of the API (like logging and token management.)</p>
+
+<p>I also changed the function <code>print_error</code> to <code>print_message</code>. The first argument specifies if it's an error or a success message to be printed. Chaning the function also involved adding a logging functionality to messages. (Remember, as of last week, only successes were being logged?)</p>]]></description><link>http://127.0.0.1:2368/week-3-developing-course-apis/</link><guid isPermaLink="false">901e68e2-f6b9-46b5-8678-88666425e33c</guid><dc:creator><![CDATA[Shaumik Daityari]]></dc:creator><pubDate>Sun, 08 Jun 2014 15:36:07 GMT</pubDate></item><item><title><![CDATA[Week 2 - Making the first API calls]]></title><description><![CDATA[<p>After successfully creating the login and logout API calls, the next step was to create some basic API calls. The very first area that we decided to implement was <code>courses</code>.</p>
 
 <p>The following API calls were implemented.  </p>
 

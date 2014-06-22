@@ -1,5 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Google Summer of Code 2014]]></title><description><![CDATA[Creating a REST API for humans]]></description><link>http://127.0.0.1:2368/</link><generator>Ghost v0.4.2</generator><lastBuildDate>Sun, 15 Jun 2014 14:45:48 GMT</lastBuildDate><atom:link href="http://127.0.0.1:2368/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Week 4 - Making efficient code (aka "the daddy function")]]></title><description><![CDATA[<p>Let me start by telling you a story that my mentor once told me. There are four stages in the work cycle of a developer.</p>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Google Summer of Code 2014]]></title><description><![CDATA[Creating a REST API for humans]]></description><link>http://127.0.0.1:2368/</link><generator>Ghost v0.4.2</generator><lastBuildDate>Sun, 22 Jun 2014 12:12:14 GMT</lastBuildDate><atom:link href="http://127.0.0.1:2368/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Week 5 - Creating new API calls]]></title><description><![CDATA[<p>I left last week's post by telling you about the creation of functions <code>api_backbone</code> and <code>create_SQL_clause</code>. This week, I started with re-factoring those functions.</p>
+
+<p>The first issue with <code>api_backbone</code> was that there were too many arguments to be passed. The readability was taking a hit and by simply looking at a function call, it was difficult to understand which parameters represented what.</p>
+
+<p>The simple solution to this was passing arguments like we do in JavaScript. Therefore, the code ended up looking something like the following.</p>
+
+<pre><code>function api_backbone($options) {  
+    /*
+     * Function to perform all API calls
+     * Every call has a token, checks access level and performs a query
+     * This function takes those as argument and logs the request
+     */
+
+    $defaults = array(
+        "request_type" =&gt; HTTP_GET,
+        "access_level" =&gt; ADMIN_ACCESS_LEVEL,
+        "member_id" =&gt; -1
+    );
+
+    $options = array_merge($defaults, $options);
+
+    ...
+
+}
+</code></pre>
+
+<p><code>array_merge</code> does exactly what <code>$.extend()</code> did, replacing common keys with values of <code>options</code>, but keeping the <code>defaults</code> in case they weren't present in <code>options</code>.</p>
+
+<p>Some notable options in the function <code>api_backbone</code> are as follows.</p>
+
+<ul>
+<li><code>returned_id_name</code> - Set it to <code>true</code> and <code>mysql_insert_id</code> is run after an <code>INSERT</code> call. Useful in <code>POST</code> calls to create objects.</li>
+<li><code>query_id_existence</code> and <code>query_id_existence_array</code> contain the query to be run to check if an object exists, before the main query (typically to edit or delete it) is run.</li>
+<li><code>one_row</code> is <code>true</code> when the result of the query is supposed to consist of a single row.</li>
+</ul>
+
+<p>The next task I did was to introduce a debug mode in the API. I figured it was difficult to print the query using <code>vsprintf</code> every time there was an error in the SQL query. That is why, I set a constant <code>DEBUG</code> in <code>api/core/constants.php</code> to <code>true</code>. Now, for every call to <code>api_backbone</code>, irrespective of the situation, prints the query being executed.</p>
+
+<p>Another small, but significant change in terms of efficiency was the addition of <code>JOIN</code> to my SQL queries. I was using just the alias syntax, but <a href='http://www.sitepoint.com/forums/showthread.php?1212622-Need-help-with-SQL-joins&amp;s=b80d7b102e6cb0179dadda3701132e8c&amp;p=5672631' >a discussion on the SitePoint forums</a> tells me that <code>JOIN</code> is more efficient. Since I am not an expert on the topic, I just took the advice.</p>
+
+<p>The next change was to add a boilerplate class, which one could just copy the directory and start off a new app (after reading the inline comments of course).</p>
+
+<p>Lastly, I tried create a few API calls using the functions that I had made. Turns out the task is pretty easy now. <code>PUT</code>, <code>POST</code> for courses and a few <code>GET</code> calls for member lists is what I accomplished in almost no time!</p>
+
+<p>Another great week (this time, I didn't miss a post... yet) and here's hoping the next week is even better!</p>
+
+<p>P.S. Mid Term evaluations are just a few days away. I double checked my proposal to ensure that I am well ahead of the schedule.</p>]]></description><link>http://127.0.0.1:2368/week-5-creating-new-api-calls/</link><guid isPermaLink="false">99a5b36f-aad8-49e7-b00c-cc85482dc880</guid><category><![CDATA[rest]]></category><dc:creator><![CDATA[Shaumik Daityari]]></dc:creator><pubDate>Sun, 22 Jun 2014 12:09:38 GMT</pubDate></item><item><title><![CDATA[Week 4 - Making efficient code (aka "the daddy function")]]></title><description><![CDATA[<p>Let me start by telling you a story that my mentor once told me. There are four stages in the work cycle of a developer.</p>
 
 <ul>
 <li><strong>Stage 1 - Make it work</strong> <br />

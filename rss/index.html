@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Google Summer of Code 2014]]></title><description><![CDATA[Creating a REST API for humans]]></description><link>http://127.0.0.1:2368/</link><generator>Ghost v0.4.2</generator><lastBuildDate>Sun, 22 Jun 2014 12:12:14 GMT</lastBuildDate><atom:link href="http://127.0.0.1:2368/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Week 5 - Creating new API calls]]></title><description><![CDATA[<p>I left last week's post by telling you about the creation of functions <code>api_backbone</code> and <code>create_SQL_clause</code>. This week, I started with re-factoring those functions.</p>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Google Summer of Code 2014]]></title><description><![CDATA[Creating a REST API for humans]]></description><link>http://127.0.0.1:2368/</link><generator>Ghost v0.4.2</generator><lastBuildDate>Mon, 30 Jun 2014 15:54:06 GMT</lastBuildDate><atom:link href="http://127.0.0.1:2368/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Week 6 - Creating admin functions]]></title><description><![CDATA[<p>After making the <code>api_backbone</code> function more effective and efficient, this week saw some basic API calls followed by making admin functionaities. The week started with the mid term evaluations, which I passed.</p>
+
+<p>I started off with a few calls for member lists from the table <code>AT_members</code>. A few API calls that were implemented are as follows-</p>
+
+<pre><code>GET /api/instructors/[instructor_id]/courses/[course_id]/instructors  
+GET /api/instructors/[instructor_id]/courses/[course_id]/students  
+</code></pre>
+
+<p>The first call returns the list of instructors for a particular course. The second one is for a list of students enrolled in a course. The access levels for these calls are admin and instructor, respectively.</p>
+
+<p>Before we move on to the admin functionalities, let us discuss two more things that were implemented- logging level and token expiry.</p>
+
+<p>Till last week, all API calls were being logged. Now, we have defined three logging levels- No logging, logging except GET calls and all logging. These are self explanatory, except the second, which would log all errors, even if it was a GET call.</p>
+
+<p>Again, the token expiry date was set at one day from the date of creation or modification. However, this setting is now set by the admin to a certain number of days.</p>
+
+<p>These settings are stored in the table <code>AT_config</code> with a name and value. These settings can be accessed anywhere in ATutor with the help of the array <code>$_config[]</code>. For instance, the settings that I am concerned with right now are <code>$_config['api_logging_level']</code> and <code>$_config['api_token_expiry']</code>.</p>
+
+<p>The admin functionality was created within the module that was created for the purpose. The first functions were the ability to change the logging level and token expiry.</p>
+
+<p>Secondly, the admin could download the API log as a JSON file. I am currently thinking of creating the ability to download it as CSV. Lastly, the admin can clear the API log. This essentialy clears the <code>AT_api_logs</code> table.</p>
+
+<p>This rounds up another productive week. Let's hope we have a great second half ahead!</p>]]></description><link>http://127.0.0.1:2368/week-6-creating-admin-functions/</link><guid isPermaLink="false">ab6095d3-d3da-4a1e-8880-9dfce8a1eae0</guid><category><![CDATA[atutor]]></category><category><![CDATA[module]]></category><dc:creator><![CDATA[Shaumik Daityari]]></dc:creator><pubDate>Mon, 30 Jun 2014 15:53:31 GMT</pubDate></item><item><title><![CDATA[Week 5 - Creating new API calls]]></title><description><![CDATA[<p>I left last week's post by telling you about the creation of functions <code>api_backbone</code> and <code>create_SQL_clause</code>. This week, I started with re-factoring those functions.</p>
 
 <p>The first issue with <code>api_backbone</code> was that there were too many arguments to be passed. The readability was taking a hit and by simply looking at a function call, it was difficult to understand which parameters represented what.</p>
 

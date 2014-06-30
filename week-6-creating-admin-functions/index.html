@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     
-    <title>Week 2 - Making the first API calls</title>
+    <title>Week 6 - Creating admin functions</title>
     <meta name="description" content="" />
 
     <meta name="HandheldFriendly" content="True" />
@@ -23,7 +23,7 @@
 <link rel="alternate" type="application/rss+xml" title="Google Summer of Code 2014" href="../rss/index.html">
 <link rel="canonical" href="index.html" />
 </head>
-<body class="post-template">
+<body class="post-template tag-atutor tag-module">
 
     
     
@@ -32,7 +32,7 @@
 
 <main class="content" role="main">
 
-    <article class="post">
+    <article class="post tag-atutor tag-module">
 
         
         <header class="post-header">
@@ -46,46 +46,34 @@
         
         
 
-            <span class="post-meta"><time datetime="2014-06-01">01 Jun 2014</time> </span>
+            <span class="post-meta"><time datetime="2014-06-30">30 Jun 2014</time> on <a href="../tag/atutor/index.html">atutor</a> | <a href="../tag/module/index.html">module</a></span>
 
-            <h1 class="post-title">Week 2 - Making the first API calls</h1>
+            <h1 class="post-title">Week 6 - Creating admin functions</h1>
 
             <section class="post-content">
-                <p>After successfully creating the login and logout API calls, the next step was to create some basic API calls. The very first area that we decided to implement was <code>courses</code>.</p>
+                <p>After making the <code>api_backbone</code> function more effective and efficient, this week saw some basic API calls followed by making admin functionaities. The week started with the mid term evaluations, which I passed.</p>
 
-<p>The following API calls were implemented.  </p>
+<p>I started off with a few calls for member lists from the table <code>AT_members</code>. A few API calls that were implemented are as follows-</p>
 
-<pre><code>GET /api/courses/  
-GET /api/courses/[course_id]  
-GET /api/courses?title=[title]&amp;category_id=[category_id]&amp;primary_language=[primary_language]  
+<pre><code>GET /api/instructors/[instructor_id]/courses/[course_id]/instructors  
+GET /api/instructors/[instructor_id]/courses/[course_id]/students  
 </code></pre>
 
-<p>In my previous post, I mentioned that I hadn't implemented how to decide the access level of a member. This week, I added the feature by making queries to two different tables- one for members and the other for admins. Since that was accomplished, I could proceed with two courses related calls for instructors and students.</p>
+<p>The first call returns the list of instructors for a particular course. The second one is for a list of students enrolled in a course. The access levels for these calls are admin and instructor, respectively.</p>
 
-<pre><code>GET /api/students/[student_id]/courses  
-GET /api/instructors/[instructor_id]/courses  
-</code></pre>
+<p>Before we move on to the admin functionalities, let us discuss two more things that were implemented- logging level and token expiry.</p>
 
-<p>The first would return list the courses that a student is enrolled in and the second would return the list of courses that an instructor teaches.</p>
+<p>Till last week, all API calls were being logged. Now, we have defined three logging levels- No logging, logging except GET calls and all logging. These are self explanatory, except the second, which would log all errors, even if it was a GET call.</p>
 
-<p>I had created a function last week to authenticate an access token. Because of the two above APIs, I needed to cross check if the access token matched the student or instructor ID provided in the URL above. That would mean an extra query. To avoid that, I added an extra argument to the authentication function that returns the <code>member_id</code> along with the token. Here's how it looks.</p>
+<p>Again, the token expiry date was set at one day from the date of creation or modification. However, this setting is now set by the admin to a certain number of days.</p>
 
-<pre><code>function (..., $return_member_id = false) {  
-    ...
-    return array($token, $member_id);
-}
-</code></pre>
+<p>These settings are stored in the table <code>AT_config</code> with a name and value. These settings can be accessed anywhere in ATutor with the help of the array <code>$_config[]</code>. For instance, the settings that I am concerned with right now are <code>$_config['api_logging_level']</code> and <code>$_config['api_token_expiry']</code>.</p>
 
-<p>How do I get the value?</p>
+<p>The admin functionality was created within the module that was created for the purpose. The first functions were the ability to change the logging level and token expiry.</p>
 
-<pre><code>list($token, $member_id) = get_access_token(..., true);  
-</code></pre>
+<p>Secondly, the admin could download the API log as a JSON file. I am currently thinking of creating the ability to download it as CSV. Lastly, the admin can clear the API log. This essentialy clears the <code>AT_api_logs</code> table.</p>
 
-<p>Pretty Pythonic, isn't it?</p>
-
-<p>Another important task accomplished in the week is the logging of all API calls. The request URI, token, HTTP method, IP address and the response are logged in the database.</p>
-
-<p>One last thing to do is to create logs in case of errors.</p>
+<p>This rounds up another productive week. Let's hope we have a great second half ahead!</p>
             </section>
 
             <footer class="post-footer">
@@ -101,15 +89,15 @@ GET /api/instructors/[instructor_id]/courses
 
                 <section class="share">
                     <h4>Share this post</h4>
-                    <a class="icon-twitter" href="https://twitter.com/share?text=Week%202%20-%20Making%20the%20first%20API%20calls&amp;url=http://127.0.0.1:2368/week-2-making-the-first-api-calls/"
+                    <a class="icon-twitter" href="https://twitter.com/share?text=Week%206%20-%20Creating%20admin%20functions&amp;url=http://127.0.0.1:2368/week-6-creating-admin-functions/"
                         onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
                         <span class="hidden">Twitter</span>
                     </a>
-                    <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://127.0.0.1:2368/week-2-making-the-first-api-calls/"
+                    <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://127.0.0.1:2368/week-6-creating-admin-functions/"
                         onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
                         <span class="hidden">Facebook</span>
                     </a>
-                    <a class="icon-google-plus" href="https://plus.google.com/share?url=http://127.0.0.1:2368/week-2-making-the-first-api-calls/"
+                    <a class="icon-google-plus" href="https://plus.google.com/share?url=http://127.0.0.1:2368/week-6-creating-admin-functions/"
                        onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
                         <span class="hidden">Google+</span>
                     </a>

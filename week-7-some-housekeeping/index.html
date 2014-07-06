@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     
-    <title>Week 6 - Creating admin functions</title>
+    <title>Week 7 - Some housekeeping</title>
     <meta name="description" content="" />
 
     <meta name="HandheldFriendly" content="True" />
@@ -23,7 +23,7 @@
 <link rel="alternate" type="application/rss+xml" title="Google Summer of Code 2014" href="../rss/index.html">
 <link rel="canonical" href="index.html" />
 </head>
-<body class="post-template tag-atutor tag-module">
+<body class="post-template tag-atutor tag-api tag-gsoc tag-week-7">
 
     
     
@@ -32,7 +32,7 @@
 
 <main class="content" role="main">
 
-    <article class="post tag-atutor tag-module">
+    <article class="post tag-atutor tag-api tag-gsoc tag-week-7">
 
         
         <header class="post-header">
@@ -46,34 +46,24 @@
         
         
 
-            <span class="post-meta"><time datetime="2014-06-30">30 Jun 2014</time> on <a href="../tag/atutor/index.html">atutor</a> | <a href="../tag/module/index.html">module</a></span>
+            <span class="post-meta"><time datetime="2014-07-06">06 Jul 2014</time> on <a href="../tag/atutor/index.html">atutor</a> | <a href="../tag/api/index.html">api</a> | <a href="../tag/gsoc/index.html">gsoc</a> | <a href="../tag/week-7/index.html">week 7</a></span>
 
-            <h1 class="post-title">Week 6 - Creating admin functions</h1>
+            <h1 class="post-title">Week 7 - Some housekeeping</h1>
 
             <section class="post-content">
-                <p>After making the <code>api_backbone</code> function more effective and efficient, this week saw some basic API calls followed by making admin functionaities. The week started with the mid term evaluations, which I passed.</p>
+                <p>I started the week where I left off last week- at the admin functions. Although I had provided a lot of things to be done, one last thing was clearing of inactive tokens.</p>
 
-<p>I started off with a few calls for member lists from the table <code>AT_members</code>. A few API calls that were implemented are as follows-</p>
+<p>As the admin can set the period of time for which tokens are valid, there is a possibility of the database tables getting filled with expired tokens. There is a cron job available in ATutor, which I will explore later. For now, I have given an option to the admin to clear the inactive tokens.</p>
 
-<pre><code>GET /api/instructors/[instructor_id]/courses/[course_id]/instructors  
-GET /api/instructors/[instructor_id]/courses/[course_id]/students  
-</code></pre>
+<p>I mentioned two weeks ago about introducing a <code>DEBUG</code> mode which prints the SQL query being executed. This week, I added few more adjustments to it, including displaying the token related queries.</p>
 
-<p>The first call returns the list of instructors for a particular course. The second one is for a list of students enrolled in a course. The access levels for these calls are admin and instructor, respectively.</p>
+<p>Last week, I implemented a logging level in which all requests except <code>GET</code> requests were logged. This week, I changed the implementation of logging errors in case of <code>GET</code> requests in case this logging level was active.</p>
 
-<p>Before we move on to the admin functionalities, let us discuss two more things that were implemented- logging level and token expiry.</p>
+<p>Using the already matured <code>api_backbone</code>, I started implementing a few more of the API calls. I had started with the <code>GET</code> calls for members (instructors and students both), so I went ahead and implemented the <code>POST</code>, <code>PUT</code> and <code>DELETE</code> ones. There were many calls that I had to implement (for both students and instructors), a list of which can be found in <a href="https://github.com/sdaityari/ATutor/pull/24/commits">the commit history</a>. That concluded all member related calls. From the original list, I am now left with calls for questions and tests only.</p>
 
-<p>Till last week, all API calls were being logged. Now, we have defined three logging levels- No logging, logging except GET calls and all logging. These are self explanatory, except the second, which would log all errors, even if it was a GET call.</p>
+<p>Lastly, to reuse the SQL queries, I have been using functions like <code>get_courses_main()</code> and <code>get_members_main()</code>. To see how the code looks like if we do not reuse the SQL queries and write new ones for evert call, my mentor suggested I do that in a separate branch. You can find the alternate branch <a href="https://github.com/sdaityari/ATutor/pull/25/">here</a>. I will wait for his feedback before I decide to go ahead with one of the branches.</p>
 
-<p>Again, the token expiry date was set at one day from the date of creation or modification. However, this setting is now set by the admin to a certain number of days.</p>
-
-<p>These settings are stored in the table <code>AT_config</code> with a name and value. These settings can be accessed anywhere in ATutor with the help of the array <code>$_config[]</code>. For instance, the settings that I am concerned with right now are <code>$_config['api_logging_level']</code> and <code>$_config['api_token_expiry']</code>.</p>
-
-<p>The admin functionality was created within the module that was created for the purpose. The first functions were the ability to change the logging level and token expiry.</p>
-
-<p>Secondly, the admin could download the API log as a JSON file. I am currently thinking of creating the ability to download it as CSV. Lastly, the admin can clear the API log. This essentialy clears the <code>AT_api_logs</code> table.</p>
-
-<p>This rounds up another productive week. Let's hope we have a great second half ahead!</p>
+<p>P.S. This week, I crossed 50 commits on my branch(es). That's about 1.3 commit a day - not a bad pace.</p>
             </section>
 
             <footer class="post-footer">
@@ -89,15 +79,15 @@ GET /api/instructors/[instructor_id]/courses/[course_id]/students
 
                 <section class="share">
                     <h4>Share this post</h4>
-                    <a class="icon-twitter" href="https://twitter.com/share?text=Week%206%20-%20Creating%20admin%20functions&amp;url=http://127.0.0.1:2368/week-6-creating-admin-functions/"
+                    <a class="icon-twitter" href="https://twitter.com/share?text=Week%207%20-%20Some%20housekeeping&amp;url=http://127.0.0.1:2368/week-7-some-housekeeping/"
                         onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
                         <span class="hidden">Twitter</span>
                     </a>
-                    <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://127.0.0.1:2368/week-6-creating-admin-functions/"
+                    <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://127.0.0.1:2368/week-7-some-housekeeping/"
                         onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
                         <span class="hidden">Facebook</span>
                     </a>
-                    <a class="icon-google-plus" href="https://plus.google.com/share?url=http://127.0.0.1:2368/week-6-creating-admin-functions/"
+                    <a class="icon-google-plus" href="https://plus.google.com/share?url=http://127.0.0.1:2368/week-7-some-housekeeping/"
                        onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
                         <span class="hidden">Google+</span>
                     </a>

@@ -1,5 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Google Summer of Code 2014]]></title><description><![CDATA[Creating a REST API for humans]]></description><link>http://127.0.0.1:2368/</link><generator>Ghost v0.4.2</generator><lastBuildDate>Sun, 06 Jul 2014 14:58:39 GMT</lastBuildDate><atom:link href="http://127.0.0.1:2368/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Week 7 - Some housekeeping]]></title><description><![CDATA[<p>I started the week where I left off last week- at the admin functions. Although I had provided a lot of things to be done, one last thing was clearing of inactive tokens.</p>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Google Summer of Code 2014]]></title><description><![CDATA[Creating a REST API for humans]]></description><link>http://127.0.0.1:2368/</link><generator>Ghost v0.4.2</generator><lastBuildDate>Mon, 14 Jul 2014 17:33:11 GMT</lastBuildDate><atom:link href="http://127.0.0.1:2368/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Week 8 - Condensing the code]]></title><description><![CDATA[<p>Last week, I left at the approval on an alternate branch that I was working on. That got approved and I continued more work on it this week.</p>
+
+<p>What was the whole idea of an alternate branch?</p>
+
+<p>I was using helper functions to reuse certain SQL queries easy. Not small ones &mdash; large ones with multiple tables that were pretty complex to understand at the first glance.</p>
+
+<p>The basic idea was that it became too difficult for a new developer looking at the API for the first time to understand what was going on!</p>
+
+<p>That is why I had to eliminate all such unnecessary functions &mdash; and create all API calls using two basic functions &mdash; <code>api_backbone</code> and <code>create_SQL_clause</code>. This way, a new developer had to understand the use of only these two functions to start creating APIs.</p>
+
+<p>Thus started the task of elimination of those functions.</p>
+
+<p>Next, I revisited the boilerplate class because there had been updates since I last modified it.</p>
+
+<p>Now, it contains everything that you need to know to start writing APIs. You can just copy the boilerplate directory and start working. Inline comments explain what the code does, why it is needed and how to do it.</p>
+
+<p>Thirdly, I started working on a new branch <code>api_merge</code>. Why? Short answer &mdash; to merge redundant classes.</p>
+
+<p>Consider the following URLs.</p>
+
+<pre><code>GET /api/courses  
+GET /api/courses/1  
+</code></pre>
+
+<p>Ideally, these two functions perform the task of retrieving data from the same table <code>AT_courses</code>. However, I was doing the task through two different classes &mdash; <code>CoursesList</code> and <code>CourseDetails</code>. Why? Firstly, the old way meant I was doing these things through helper functions &mdash; so I didn't really understand what was going on as it appeared to be single line function calls to the helper functions. Secondly, different URL structures meant different classes to me &mdash; until I saw the bigger picture. The subtle differences could be removed with just a few lines of code.</p>
+
+<p>So, I worked the rest of the week on merging such functions together. The eventual difference in code on the branch can be viewed <a href='https://github.com/sdaityari/ATutor/pull/26/files' >here</a>.</p>
+
+<p>Just four more weeks left now. I am happy with the progress.</p>]]></description><link>http://127.0.0.1:2368/week-8-condensing-the-code/</link><guid isPermaLink="false">1fd2b7ec-1bf6-45af-8d99-58dca4eaba43</guid><category><![CDATA[condense]]></category><dc:creator><![CDATA[Shaumik Daityari]]></dc:creator><pubDate>Mon, 14 Jul 2014 17:32:45 GMT</pubDate></item><item><title><![CDATA[Week 7 - Some housekeeping]]></title><description><![CDATA[<p>I started the week where I left off last week- at the admin functions. Although I had provided a lot of things to be done, one last thing was clearing of inactive tokens.</p>
 
 <p>As the admin can set the period of time for which tokens are valid, there is a possibility of the database tables getting filled with expired tokens. There is a cron job available in ATutor, which I will explore later. For now, I have given an option to the admin to clear the inactive tokens.</p>
 

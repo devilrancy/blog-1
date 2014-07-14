@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     
-    <title>Week 6 - Creating admin functions</title>
+    <title>Week 8 - Condensing the code</title>
     <meta name="description" content="" />
 
     <meta name="HandheldFriendly" content="True" />
@@ -23,7 +23,7 @@
 <link rel="alternate" type="application/rss+xml" title="Google Summer of Code 2014" href="../rss/index.html">
 <link rel="canonical" href="index.html" />
 </head>
-<body class="post-template tag-atutor tag-module">
+<body class="post-template tag-condense">
 
     
     
@@ -32,7 +32,7 @@
 
 <main class="content" role="main">
 
-    <article class="post tag-atutor tag-module">
+    <article class="post tag-condense">
 
         
         <header class="post-header">
@@ -46,34 +46,40 @@
         
         
 
-            <span class="post-meta"><time datetime="2014-06-30">30 Jun 2014</time> on <a href="../tag/atutor/index.html">atutor</a> | <a href="../tag/module/index.html">module</a></span>
+            <span class="post-meta"><time datetime="2014-07-14">14 Jul 2014</time> on <a href="../tag/condense/index.html">condense</a></span>
 
-            <h1 class="post-title">Week 6 - Creating admin functions</h1>
+            <h1 class="post-title">Week 8 - Condensing the code</h1>
 
             <section class="post-content">
-                <p>After making the <code>api_backbone</code> function more effective and efficient, this week saw some basic API calls followed by making admin functionaities. The week started with the mid term evaluations, which I passed.</p>
+                <p>Last week, I left at the approval on an alternate branch that I was working on. That got approved and I continued more work on it this week.</p>
 
-<p>I started off with a few calls for member lists from the table <code>AT_members</code>. A few API calls that were implemented are as follows-</p>
+<p>What was the whole idea of an alternate branch?</p>
 
-<pre><code>GET /api/instructors/[instructor_id]/courses/[course_id]/instructors  
-GET /api/instructors/[instructor_id]/courses/[course_id]/students  
+<p>I was using helper functions to reuse certain SQL queries easy. Not small ones &mdash; large ones with multiple tables that were pretty complex to understand at the first glance.</p>
+
+<p>The basic idea was that it became too difficult for a new developer looking at the API for the first time to understand what was going on!</p>
+
+<p>That is why I had to eliminate all such unnecessary functions &mdash; and create all API calls using two basic functions &mdash; <code>api_backbone</code> and <code>create_SQL_clause</code>. This way, a new developer had to understand the use of only these two functions to start creating APIs.</p>
+
+<p>Thus started the task of elimination of those functions.</p>
+
+<p>Next, I revisited the boilerplate class because there had been updates since I last modified it.</p>
+
+<p>Now, it contains everything that you need to know to start writing APIs. You can just copy the boilerplate directory and start working. Inline comments explain what the code does, why it is needed and how to do it.</p>
+
+<p>Thirdly, I started working on a new branch <code>api_merge</code>. Why? Short answer &mdash; to merge redundant classes.</p>
+
+<p>Consider the following URLs.</p>
+
+<pre><code>GET /api/courses  
+GET /api/courses/1  
 </code></pre>
 
-<p>The first call returns the list of instructors for a particular course. The second one is for a list of students enrolled in a course. The access levels for these calls are admin and instructor, respectively.</p>
+<p>Ideally, these two functions perform the task of retrieving data from the same table <code>AT_courses</code>. However, I was doing the task through two different classes &mdash; <code>CoursesList</code> and <code>CourseDetails</code>. Why? Firstly, the old way meant I was doing these things through helper functions &mdash; so I didn't really understand what was going on as it appeared to be single line function calls to the helper functions. Secondly, different URL structures meant different classes to me &mdash; until I saw the bigger picture. The subtle differences could be removed with just a few lines of code.</p>
 
-<p>Before we move on to the admin functionalities, let us discuss two more things that were implemented- logging level and token expiry.</p>
+<p>So, I worked the rest of the week on merging such functions together. The eventual difference in code on the branch can be viewed <a href="https://github.com/sdaityari/ATutor/pull/26/files">here</a>.</p>
 
-<p>Till last week, all API calls were being logged. Now, we have defined three logging levels- No logging, logging except GET calls and all logging. These are self explanatory, except the second, which would log all errors, even if it was a GET call.</p>
-
-<p>Again, the token expiry date was set at one day from the date of creation or modification. However, this setting is now set by the admin to a certain number of days.</p>
-
-<p>These settings are stored in the table <code>AT_config</code> with a name and value. These settings can be accessed anywhere in ATutor with the help of the array <code>$_config[]</code>. For instance, the settings that I am concerned with right now are <code>$_config['api_logging_level']</code> and <code>$_config['api_token_expiry']</code>.</p>
-
-<p>The admin functionality was created within the module that was created for the purpose. The first functions were the ability to change the logging level and token expiry.</p>
-
-<p>Secondly, the admin could download the API log as a JSON file. I am currently thinking of creating the ability to download it as CSV. Lastly, the admin can clear the API log. This essentialy clears the <code>AT_api_logs</code> table.</p>
-
-<p>This rounds up another productive week. Let's hope we have a great second half ahead!</p>
+<p>Just four more weeks left now. I am happy with the progress.</p>
             </section>
 
             <footer class="post-footer">
@@ -89,15 +95,15 @@ GET /api/instructors/[instructor_id]/courses/[course_id]/students
 
                 <section class="share">
                     <h4>Share this post</h4>
-                    <a class="icon-twitter" href="https://twitter.com/share?text=Week%206%20-%20Creating%20admin%20functions&amp;url=http://127.0.0.1:2368/week-6-creating-admin-functions/"
+                    <a class="icon-twitter" href="https://twitter.com/share?text=Week%208%20-%20Condensing%20the%20code&amp;url=http://127.0.0.1:2368/week-8-condensing-the-code/"
                         onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
                         <span class="hidden">Twitter</span>
                     </a>
-                    <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://127.0.0.1:2368/week-6-creating-admin-functions/"
+                    <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://127.0.0.1:2368/week-8-condensing-the-code/"
                         onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
                         <span class="hidden">Facebook</span>
                     </a>
-                    <a class="icon-google-plus" href="https://plus.google.com/share?url=http://127.0.0.1:2368/week-6-creating-admin-functions/"
+                    <a class="icon-google-plus" href="https://plus.google.com/share?url=http://127.0.0.1:2368/week-8-condensing-the-code/"
                        onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
                         <span class="hidden">Google+</span>
                     </a>

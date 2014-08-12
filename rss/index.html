@@ -1,5 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Google Summer of Code 2014]]></title><description><![CDATA[Creating a REST API for humans]]></description><link>http://127.0.0.1:2368/</link><generator>Ghost v0.4.2</generator><lastBuildDate>Mon, 14 Jul 2014 17:33:11 GMT</lastBuildDate><atom:link href="http://127.0.0.1:2368/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Week 8 - Condensing the code]]></title><description><![CDATA[<p>Last week, I left at the approval on an alternate branch that I was working on. That got approved and I continued more work on it this week.</p>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Google Summer of Code 2014]]></title><description><![CDATA[Creating a REST API for humans]]></description><link>http://127.0.0.1:2368/</link><generator>Ghost v0.4.2</generator><lastBuildDate>Tue, 12 Aug 2014 10:01:12 GMT</lastBuildDate><atom:link href="http://127.0.0.1:2368/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Weeks 9-10: Completing basic calls in the GSoC]]></title><description><![CDATA[<p>Last week was marked by travel plans, which is why I have decided to merge report of the work of two of these weeks together.</p>
+
+<p>The first thing was to change the code as per the comments from my mentor. This involved primarily cleaning up the code, which can be seen in <a href='https://github.com/sdaityari/ATutor/commit/78dc07fab6601ea787c85a542396585ba2a0dbe6' >this commit</a>. It was basically about cleaning up redundant code. For instance, look at the following &mdash;</p>
+
+<pre><code>    $clause = create_SQL_clause(array(
+        "c.title" =&gt; $_GET["title"],
+            "c.cat_id" =&gt; $_GET["category_id"],
+        "c.primary_language" =&gt; $_GET["primary_language"]
+    ));
+
+    $clause_with_id = create_SQL_clause(array(
+        "c.course_id" =&gt; $course_id
+    ));
+</code></pre>
+
+<p>&mdash; was reduced to something like this.</p>
+
+<pre><code>    if ($course_id) {
+        $sql_array = array(
+            "c.course_id" =&gt; $course_id
+        );
+    } else {
+        $sql_array = array(
+            "c.title" =&gt; $_GET["title"],
+            "c.cat_id" =&gt; $_GET["category_id"],
+            "c.primary_language" =&gt; $_GET["primary_language"]
+        );
+    }
+    $clause = create_SQL_clause($sql_array);
+</code></pre>
+
+<p>I wonder why I hadn't thought of this before!</p>
+
+<p>Moving on, I started working on the last set of APIs on tests, questions and question categories.</p>
+
+<p>The list of calls accomplished in Week 9 were the following &mdash;</p>
+
+<h3 id="tests">Tests</h3>
+
+<pre><code>GET /api/tests
+GET /api/tests/[test_id]
+GET /api/tests?title=[title]&amp;start_date=[start_date]&amp;end_date=[end_date]
+GET /api/instructor/[instructor_id]/courses/[courseid]/tests/
+GET /api/student/[student_id]/courses/[courseid]/tests/
+</code></pre>
+
+<h3 id="questions">Questions</h3>
+
+<pre><code>GET /api/questions/
+GET /api/questions/[question_id]
+GET /api/questions/?question=[question]&amp;category_id=[category_id]&amp;type=[type]
+GET /api/tests/[test_id]/questions/ 
+
+GET /api/instructor/[instructor_id]/courses/[course_id]/tests/[test_id]/questions
+GET /api/student/[student_id]/courses/[course_id]/tests/[test_id]/questions
+</code></pre>
+
+<h3 id="questioncategories">Question Categories</h3>
+
+<pre><code>GET /api/questions/categories/
+GET /api/questions/categories/[category_id]
+GET /api/questions/categories?name=[name]
+
+POST /api/questions/categories/
+
+PUT /api/questions/categories/[category_id]
+
+DELETE /api/questions/categories/[category_id]
+</code></pre>
+
+<p>After traveling back to college and shifting to a new room, I finally got to resuming my GSoC work.</p>
+
+<p>The first thing that I did was to changed the SQL queries. My queries were unreadable up until now and I decided to work on them after reading a book <a href='http://www.sitepoint.com/store/simply-sql/' >Simply SQL</a>. The refactoring took a few days, but with the increased readability, I guess it was worth the effort.</p>
+
+<p>The next part was to complete the rest of the calls. I completed the PUT, POST and DELETE calls for tests, and the only remaining calls are that of questions from our initial list.</p>]]></description><link>http://127.0.0.1:2368/weeks-9-10-completing-basic-calls-in-the-gsoc/</link><guid isPermaLink="false">5d2b46f7-ea6c-4262-a31e-96d142bdd63a</guid><category><![CDATA[atutor]]></category><category><![CDATA[api]]></category><category><![CDATA[gsoc]]></category><dc:creator><![CDATA[Shaumik Daityari]]></dc:creator><pubDate>Tue, 12 Aug 2014 10:00:42 GMT</pubDate></item><item><title><![CDATA[Week 8 - Condensing the code]]></title><description><![CDATA[<p>Last week, I left at the approval on an alternate branch that I was working on. That got approved and I continued more work on it this week.</p>
 
 <p>What was the whole idea of an alternate branch?</p>
 
